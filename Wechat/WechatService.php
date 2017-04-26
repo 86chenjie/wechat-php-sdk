@@ -378,5 +378,25 @@ class WechatService {
         return $this->parseJson(Tools::httpGet($url));
     }
 
+    /**
+     * 第三方小程序登陆时需要先获取这个sessionkey
+     * @param $appId
+     * @param $jscode
+     * @return bool
+     */
+    public function getSessionKey($appId,$jscode){
+
+        empty($this->component_access_token) && $this->getComponentAccessToken();
+        if (empty($this->component_access_token)) {
+            return false;
+        }
+
+
+        $url = "https://api.weixin.qq.com/sns/component/jscode2session";
+        $url .= "?appid={$appId}&js_code={$jscode}&grant_type=authorization_code&component_appid={$this->component_appid}&component_access_token={$this->component_access_token}";
+        debug("getSessionKey url:{$url}");
+        return $this->parseJson(Tools::httpGet($url));
+    }
+
 
 }
